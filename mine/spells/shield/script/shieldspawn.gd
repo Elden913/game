@@ -10,12 +10,14 @@ extends Area3D
 var cnt: int
 var blocked:Array
 var nodelete:Array
+var plr:Node3D
 
 func _ready() -> void:
 	timer.start()
 	pass
 
 func _physics_process(_delta: float) -> void:
+	shieldpower = plr.player_mana
 	var objects = get_overlapping_areas()
 	
 	# If nothing is overlapping yet, keep waiting
@@ -40,6 +42,7 @@ func _physics_process(_delta: float) -> void:
 			# Unified spawn logic (no duplication)
 			var rad = global_position.distance_to(i.global_position)
 			if shieldpower >= i.power:
+				plr.mana_reduction.rpc(i.power/1.5)
 				_spawn_shield(shieldpos, i.power, rad)
 			else: 
 				_spawn_brokenshield(shieldpos, i.power, rad)

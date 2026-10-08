@@ -10,7 +10,7 @@ radius = 4.0
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ohbbn"]
 transparency = 1
 vertex_color_use_as_albedo = true
-albedo_color = Color(0, 1, 1, 0.30980393)
+albedo_color = Color(0.83137256, 0.88235295, 0.9411765, 0.023529412)
 
 [sub_resource type="SphereMesh" id="SphereMesh_28m0y"]
 material = SubResource("StandardMaterial3D_ohbbn")
