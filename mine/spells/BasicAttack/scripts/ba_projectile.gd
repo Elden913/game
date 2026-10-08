@@ -12,6 +12,8 @@ var is_tracking: bool = true
 var dist:float = 0
 var power: float
 
+func _ready() -> void: pass
+
 func _physics_process(delta: float) -> void:
 	if dist >= maxdist: queue_free()
 	if is_tracking and is_instance_valid(targ):

@@ -5,7 +5,7 @@ extends Area3D
 @onready var particles: GPUParticles3D = $GPUParticles3D
 
 var particle_mat: StandardMaterial3D
-var nodelete:Node3D
+var nodelete:Array
 
 func _ready() -> void:
 	timer.timeout.connect(_on_timer_timeout)
@@ -25,12 +25,12 @@ func _ready() -> void:
 			
 func _physics_process(delta: float) -> void:
 	for i in get_overlapping_areas():
-		if i != nodelete:
+		if !nodelete.has(i):
 			i.queue_free()
 
 func _on_timer_timeout() -> void:
 	if particle_mat:
-		print("hi")
+		#print("hi")
 		queue_free()
 	else:
 		queue_free()

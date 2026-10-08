@@ -7,6 +7,7 @@ extends Node3D
 var col:Node3D
 var start_point:Vector3
 var start_basis: Basis
+var collision_layer: int
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -29,6 +30,7 @@ func _summon(scene_to_spawn: PackedScene, pos: Vector3, dir: Basis) -> void:
 		return
 	var fx = scene_to_spawn.instantiate()
 	if fx is Node3D:
+		fx.collision_layer = collision_layer
 		fx.power = power
 		var parent = get_tree().current_scene if get_tree().current_scene else get_parent()
 		
