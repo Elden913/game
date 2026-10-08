@@ -12,8 +12,10 @@ var has_hit: bool = false
 
 var start_point: Vector3
 var col_point: Vector3
+var authority: int
 
 func _ready() -> void:
+	set_multiplayer_authority(authority)
 	global_position = start_point
 	global_position.y = 0
 	

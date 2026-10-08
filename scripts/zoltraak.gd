@@ -16,9 +16,11 @@ const PARTICLES_SCENE = preload("res://scenes/combined particles.tscn")
 var current_length: float
 var is_moving: bool = false
 var has_hit: bool = false
+var authority: int
 
 
 func _ready() -> void:
+	set_multiplayer_authority(authority)
 	global_position = start_point
 	look_at(col_point)
 	var tween = create_tween()

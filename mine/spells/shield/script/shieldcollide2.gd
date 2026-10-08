@@ -6,8 +6,10 @@ extends Area3D
 
 var particle_mat: StandardMaterial3D
 var nodelete:Array
+var parent_collision_mask: int
 
 func _ready() -> void:
+	collision_mask = parent_collision_mask
 	timer.timeout.connect(_on_timer_timeout)
 	timer.start()
 	
@@ -26,7 +28,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	for i in get_overlapping_areas():
 		if !nodelete.has(i):
-			i.queue_free()
+			get_tree().current_scene.remove_child(i)
 
 func _on_timer_timeout() -> void:
 	if particle_mat:

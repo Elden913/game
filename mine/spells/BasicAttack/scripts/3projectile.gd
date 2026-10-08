@@ -11,8 +11,10 @@ var t: float = 0.0
 var is_tracking: bool = true
 var dist:float = 0
 var power: float
+var authority: int
 
-func _ready() -> void: pass
+func _ready() -> void:
+	set_multiplayer_authority(authority)
 
 func _physics_process(delta: float) -> void:
 	if dist >= maxdist: queue_free()
@@ -46,9 +48,11 @@ func _on_body_entered(body: Node3D) -> void:
 	if body.get_collision_layer_value(3):
 		if is_multiplayer_authority():
 			body.take_damage.rpc(10)
-			print("hit: ", body)
 	var fx = hitfx.instantiate()
 	get_tree().current_scene.add_child(fx)
 	fx.global_position = global_position
 	fx.emitting = true
+	visible = false
+	await get_tree().create_timer(0.5).timeout
+	fx.queue_free()
 	queue_free()

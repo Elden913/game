@@ -9,7 +9,10 @@ var start_point:Vector3
 var start_basis: Basis
 var collision_layer: int
 
+var authority: int
+
 func _ready() -> void:
+	set_multiplayer_authority(authority)
 	await get_tree().process_frame
 	global_basis = start_basis
 	global_position = start_point
@@ -30,6 +33,7 @@ func _summon(scene_to_spawn: PackedScene, pos: Vector3, dir: Basis) -> void:
 		return
 	var fx = scene_to_spawn.instantiate()
 	if fx is Node3D:
+		fx.authority = authority
 		fx.collision_layer = collision_layer
 		fx.power = power
 		var parent = get_tree().current_scene if get_tree().current_scene else get_parent()
