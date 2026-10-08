@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c67n611xoqjt4"]
 
-[ext_resource type="Script" uid="uid://b527bk75w6n8t" path="res://mine/spells/BasicAttack/scripts/ba_projectile.gd" id="1_j0o62"]
+[ext_resource type="Script" uid="uid://b527bk75w6n8t" path="res://mine/spells/BasicAttack/scripts/3projectile.gd" id="1_j0o62"]
 [ext_resource type="Shader" uid="uid://bwu78jttdkqo5" path="res://shaders/zoltraak.gdshader" id="2_0thpo"]
 [ext_resource type="PackedScene" uid="uid://dxsrb7vdniat2" path="res://mine/spells/BasicAttack/scenes/impact.tscn" id="2_uych5"]
 

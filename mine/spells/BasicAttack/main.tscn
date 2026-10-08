@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cuh1uy4e4viuj"]
 
-[ext_resource type="Script" uid="uid://dhe6dbe6bugxl" path="res://mine/spells/BasicAttack/scripts/basicatk.gd" id="1_lbemd"]
+[ext_resource type="Script" uid="uid://dhe6dbe6bugxl" path="res://mine/spells/BasicAttack/scripts/1main.gd" id="1_lbemd"]
 [ext_resource type="PackedScene" uid="uid://d1kiyc8g80amh" path="res://mine/spells/BasicAttack/scenes/particle_BAspawn.tscn" id="2_alnag"]
 
 [node name="basicatk" type="Node3D" unique_id=1183637238]

@@ -1,7 +1,5 @@
 [gd_scene format=3 uid="uid://dxsrb7vdniat2"]
 
-[ext_resource type="Script" uid="uid://q0tlng1gng52" path="res://mine/spells/BasicAttack/scripts/impact.gd" id="1_1s448"]
-
 [sub_resource type="Curve" id="Curve_kayoy"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.7175336, 0.0, 0, 0]
 point_count = 2
@@ -35,7 +33,6 @@ one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_libyx")
 draw_pass_1 = SubResource("SphereMesh_kayoy")
-script = ExtResource("1_1s448")
 
 [node name="Timer" type="Timer" parent="." unique_id=1544879119]
 wait_time = 0.5
