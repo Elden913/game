@@ -9,6 +9,7 @@ extends Area3D
 
 var cnt: int
 var blocked:Array
+var nodelete:Array
 
 func _ready() -> void:
 	timer.start()
@@ -58,10 +59,11 @@ func _spawn_shield(pos: Vector3, powerr: int, rad: float) -> void:
 		particles.amount = powerr
 		if particles.process_material is ShaderMaterial:
 			(particles.process_material as ShaderMaterial).set_shader_parameter("sphere_radius", rad)
-#gey
+
 	Shi.look_at(global_position, Vector3.UP)
 	Shi.rotate_object_local(Vector3.RIGHT, deg_to_rad(90))
-	Shi.nodelete = self
+	Shi.nodelete = nodelete
+	Shi.nodelete.append(self)
 
 	if particles:
 		particles.restart()

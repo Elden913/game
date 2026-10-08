@@ -4,6 +4,7 @@ extends GPUParticles3D
 @export var projectile:PackedScene
 var targ:Node3D
 var power: float
+var collision_layer: int
 
 func _ready() -> void:
 	timer.start()	
@@ -17,6 +18,7 @@ func _on_timer_timeout() -> void:
 	fx.power = power
 	fx.targ = targ
 	get_tree().current_scene.add_child(fx)
+	fx.collision_layer = collision_layer
 	fx.global_position = position + Vector3(0, 0, -0.25)
 	fx.global_basis = global_basis
 	queue_free()

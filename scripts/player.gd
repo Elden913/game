@@ -217,14 +217,19 @@ func crosshair_cone_cast(crosshair_angle_degrees: float = 1) -> Node3D:
 		return null
 
 var active_shield: Node = null
-
+var own_projectiles: Array
 @rpc("any_peer", "call_local", "reliable")
 func shield():
-	# 1. Clear out an existing shield immediately
+	#print("u tried")
+	
 	if is_instance_valid(active_shield):
 		active_shield.queue_free()
-	var sh = SHIELD.instantiate()
+	
+	var sh = SHIELD.instantiate() as Area3D
+	#if is_multiplayer_authority():
+		#sh.set_collision_mask_value()
 	add_child(sh)
+	sh.nodelete = own_projectiles
 	active_shield = sh
 	get_tree().create_timer(1.0).timeout.connect(_on_shield_timer_timeout.bind(sh))
 
@@ -235,6 +240,10 @@ func _on_shield_timer_timeout(sh_instance) -> void:
 @rpc("any_peer", "call_local", "reliable")
 func shoot(projectile: String, start_point: Vector3, col_point: Vector3):
 	var p = PROJECTILES[projectile].instantiate() as Node3D
+	if is_multiplayer_authority():
+		p.collision_layer = (1 << 4)
+	else:
+		p.collision_layer = (1 << 3)
 	p.col_point = col_point
 	p.start_point = start_point
 	get_tree().current_scene.add_child(p)
@@ -242,10 +251,14 @@ func shoot(projectile: String, start_point: Vector3, col_point: Vector3):
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_collider(projectile: String, start_point: Vector3, col_path: NodePath, start_basis:Basis):
+	
 	var col = get_node_or_null(col_path)
-	print("projectile: ", projectile)
 	var p = PROJECTILES[projectile].instantiate() as Node3D
-	print("p: ", p)
+	print("multiplayer authority: ", is_multiplayer_authority())
+	if is_multiplayer_authority():
+		p.collision_layer = (1 << 4)
+	else:
+		p.collision_layer = (1 << 3)
 	p.col = col
 	p.start_point = start_point
 	p.start_basis = start_basis
