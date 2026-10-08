@@ -232,6 +232,10 @@ func shield():
 		active_shield.queue_free()
 	
 	var sh = SHIELD.instantiate() as Area3D
+	if is_multiplayer_authority():
+		sh.collision_mask = 1 << 3
+	else:
+		sh.collision_mask = 1 << 4
 	#if is_multiplayer_authority():
 		#sh.set_collision_mask_value()
 	add_child(sh)
@@ -256,6 +260,7 @@ func shoot(projectile: String, start_point: Vector3, col_point: Vector3):
 		
 	p.col_point = col_point
 	p.start_point = start_point
+	p.authority = Global.peer_id
 	get_tree().current_scene.add_child(p)
 	mana_reduction.rpc(p.power)
 	p.set_multiplayer_authority(Global.peer_id)
@@ -273,6 +278,7 @@ func shoot_collider(projectile: String, start_point: Vector3, col_path: NodePath
 	p.col = col
 	p.start_point = start_point
 	p.start_basis = start_basis
+	p.authority = Global.peer_id
 	get_tree().current_scene.add_child(p)
 	mana_reduction.rpc(p.power)
 	p.set_multiplayer_authority(Global.peer_id)
