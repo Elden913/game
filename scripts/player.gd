@@ -79,6 +79,7 @@ var dash_direction: Vector3 = Vector3.ZERO
 var dash_cooldown: float = 2.0 # How many seconds before you can dash again
 var dash_cooldown_timer: float = 0.0
 
+var can_take_damage = true
 var dash_untracking_toggle := false
 
 var mana_regen_cooldown_timer :float= 0.0
@@ -287,13 +288,6 @@ func spawn_projectile(projectile: String, start_point: Vector3, col_point: Vecto
 	p.authority = Global.peer_id
 	
 	get_tree().current_scene.add_child(p)
-	if p.power <= player_mana:
-		mana_regen_cooldown_timer = 3.0
-		mana_reduction.rpc(p.power)
-		p.set_multiplayer_authority(Global.peer_id)
-	else: 
-		print("no mana lmao")
-		p.queue_free()
 
 func mana_reduction(val: float):
 	player_mana = clampf(player_mana - val, 0, max_mana)
@@ -337,6 +331,8 @@ func spawn_collider_projectile(projectile: String, start_point: Vector3, col_pat
 		p.set_multiplayer_authority(Global.peer_id)
 @rpc("any_peer", "call_local", "reliable")
 func take_damage(damage: float):
+	if not can_take_damage:
+		return
 	player_health = clampf(player_health-damage, 0, max_health)
 	if player_health == 0:
 		# FOR 1V1 ONLY

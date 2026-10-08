@@ -27,4 +27,3 @@ func _on_timer_timeout() -> void:
 	fx.global_position = position + Vector3(0, 0, -0.25)
 	fx.global_basis = global_basis
 	queue_free()
-	pass
