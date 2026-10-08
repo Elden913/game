@@ -28,7 +28,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	for i in get_overlapping_areas():
 		if !nodelete.has(i):
-			get_tree().current_scene.remove_child(i)
+			i.queue_free()
 
 func _on_timer_timeout() -> void:
 	if particle_mat:

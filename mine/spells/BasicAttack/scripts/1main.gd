@@ -41,5 +41,5 @@ func _setup_fx(fx: Node3D, pos: Vector3, dir: Basis, targ: Node3D) -> void:
 		fx.global_position = pos
 		fx.global_transform.basis = dir
 		if targ: 
-			fx.targ = col
+			fx.targ = targ
 		fx._run()
