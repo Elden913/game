@@ -1,8 +1,8 @@
 extends Area3D
 
 @export var hitfx: PackedScene
-@export var turn_speed: float = 3.0
-@export var max_turn_speed: float = 15.0
+@export var turn_speed: float = 7.0
+@export var max_turn_speed: float = 50.0
 @export var speed: float = 20.0
 @export var maxdist = 50
 

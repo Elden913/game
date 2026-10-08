@@ -61,7 +61,9 @@ var look_rotation : Vector2
 var move_speed : float = 0.0
 var freeflying : bool = false
 @export var max_health: float = 200
+@export var max_mana:float = 200
 var player_health: float = max_health
+var player_mana: float = max_mana
 
 
 
@@ -72,10 +74,10 @@ var is_dashing: bool = false
 var dash_direction: Vector3 = Vector3.ZERO
 
 
-
 var dash_cooldown: float = 2.0 # How many seconds before you can dash again
 var dash_cooldown_timer: float = 0.0
 
+var mana_regen_cooldown_timer :float= 0.0
 var far:float = 100
 
 ## IMPORTANT REFERENCES
@@ -87,6 +89,7 @@ var far:float = 100
 @onready var raycast: RayCast3D = $Head/RayCast3D
 @onready var dash_bar
 @onready var health_bar
+@onready var mana_bar
 
 var spawn_position: Vector3
 
@@ -101,6 +104,8 @@ func _ready() -> void:
 	health_bar = get_tree().current_scene.get_node("UI/HealthBar")
 	health_bar.max_value = max_health
 	health_bar.value = player_health
+	mana_bar = get_tree().current_scene.get_node("UI/ManaBar")
+	mana_bar.value = max_mana
 	dash_bar = get_tree().current_scene.get_node("UI/DashCooldown")
 	dash_bar.max_value = dash_cooldown
 	dash_bar.value = dash_cooldown
@@ -217,11 +222,9 @@ func crosshair_cone_cast(crosshair_angle_degrees: float = 1) -> Node3D:
 		return null
 
 var active_shield: Node = null
-var own_projectiles: Array
+
 @rpc("any_peer", "call_local", "reliable")
 func shield():
-	print("u tried")
-	
 	if is_instance_valid(active_shield):
 		active_shield.queue_free()
 	
@@ -233,7 +236,6 @@ func shield():
 	#if is_multiplayer_authority():
 		#sh.set_collision_mask_value()
 	add_child(sh)
-	sh.nodelete = own_projectiles
 	active_shield = sh
 	get_tree().create_timer(1.0).timeout.connect(_on_shield_timer_timeout.bind(sh))
 
@@ -243,11 +245,15 @@ func _on_shield_timer_timeout(sh_instance) -> void:
 		active_shield = null
 @rpc("any_peer", "call_local", "reliable")
 func shoot(projectile: String, start_point: Vector3, col_point: Vector3):
+	is_mana_regen_fast = false
+	is_mana_regen_slow = false	
+	mana_regen_cooldown_timer = 3
 	var p = PROJECTILES[projectile].instantiate() as Node3D
 	if is_multiplayer_authority():
 		p.collision_layer = (1 << 4)
 	else:
 		p.collision_layer = (1 << 3)
+	mana_reduction(p.power)
 	p.col_point = col_point
 	p.start_point = start_point
 	p.authority = Global.peer_id
@@ -255,7 +261,9 @@ func shoot(projectile: String, start_point: Vector3, col_point: Vector3):
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_collider(projectile: String, start_point: Vector3, col_path: NodePath, start_basis:Basis):
-	
+	is_mana_regen_fast = false
+	is_mana_regen_slow = false
+	mana_regen_cooldown_timer = 3
 	var col = get_node_or_null(col_path)
 	var p = PROJECTILES[projectile].instantiate() as Node3D
 	print("multiplayer authority: ", is_multiplayer_authority())
@@ -278,16 +286,53 @@ func take_damage(damage: float):
 		health_bar.max_value = max_health
 		health_bar.value = player_health
 	
+@rpc("any_peer", "call_local", "reliable")
+func mana_reduction(val:float):
+	player_mana = clampf(player_mana - val, 0, max_mana)
+	if player_mana == 0:
+		print("no mana")
+	if is_multiplayer_authority():
+		mana_bar.max_value = max_mana
+		mana_bar.value = player_mana
 
-
+var is_mana_regen_fast:bool = false
+@rpc("any_peer", "call_local", "reliable")
+func mana_regen_fast(delta:float) -> void:
+	var val:float= 1
+	player_mana = clampf(player_mana + val*delta, 0, max_mana)
+	val*=1.1
+	if player_mana == max_mana:
+		is_mana_regen_fast = false
+	if is_multiplayer_authority():
+		mana_bar.max_value = max_mana
+		mana_bar.value = player_mana
+	
+var is_mana_regen_slow:bool = false
+@rpc("any_peer", "call_local", "reliable")
+func mana_regen_slow(delta:float) -> void:
+	var val:float= 0.4
+	mana_regen_cooldown_timer = 5
+	player_mana = clampf(player_mana + val*delta, 0, max_mana)
+	val*=1.1
+	if player_mana == max_mana:
+		is_mana_regen_slow = false
+	if is_multiplayer_authority():
+		mana_bar.max_value = max_mana
+		mana_bar.value = player_mana
 
 func _physics_process(delta: float) -> void:
+	mana_regen_cooldown_timer -= delta
+	if delta == 0:
+		is_mana_regen_fast = true
+		is_mana_regen_slow = false
+		mana_regen_fast.rpc(delta)
+		print("regening mana")
 	if not is_multiplayer_authority():
 		return
 	if Input.is_action_just_pressed("shoot1"):
 		var col_point = get_col_point()
 		var start_point = fake_head.global_position + fake_head.global_basis * Vector3.FORWARD * 2
-		shoot.rpc("ZOLTRAAK", start_point, col_point)
+		shoot.rpc("ZOLTRAAK", start_point, col_point, )
 	if Input.is_action_just_pressed("shoot2"):
 		var col_point = get_col_point()
 		var start_point = fake_head.global_position + fake_head.global_basis * Vector3.FORWARD * 2
@@ -303,6 +348,10 @@ func _physics_process(delta: float) -> void:
 		print("testing man", collider)
 	if Input.is_action_just_pressed("shield"):
 		shield.rpc()
+		is_mana_regen_fast = false
+		is_mana_regen_slow = true
+		mana_regen_slow.rpc(delta)
+		
 		
 		
 	head.global_position = head.global_position.lerp(static_camera.global_position, 0.2)
