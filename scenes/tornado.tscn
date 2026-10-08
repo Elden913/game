@@ -184,6 +184,7 @@ collision_layer = 8
 collision_mask = 7
 script = ExtResource("1_2nlrq")
 tornado_spawn_curve = SubResource("Curve_2nlrq")
+power = 30
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=952998304]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2017586, 0)

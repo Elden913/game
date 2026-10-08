@@ -62,6 +62,9 @@ var move_speed : float = 0.0
 var freeflying : bool = false
 @export var max_health: float = 200
 @export var max_mana:float = 200
+@export var fast_mana_regen_rate: float = 20.0
+@export var medium_mana_regen_rate: float = 10.0
+@export var slow_mana_regen_rate: float = 2.0
 var player_health: float = max_health
 var player_mana: float = max_mana
 
@@ -233,33 +236,33 @@ func shield():
 		#sh.set_collision_mask_value()
 	add_child(sh)
 	active_shield = sh
+	sh.plr = self
 	get_tree().create_timer(1.0).timeout.connect(_on_shield_timer_timeout.bind(sh))
 
 func _on_shield_timer_timeout(sh_instance) -> void:
 	if is_instance_valid(active_shield) and active_shield == sh_instance:
 		active_shield.queue_free()
 		active_shield = null
+
 @rpc("any_peer", "call_local", "reliable")
 func shoot(projectile: String, start_point: Vector3, col_point: Vector3):
-	is_mana_regen_fast = false
-	is_mana_regen_slow = false	
-	mana_regen_cooldown_timer = 3
+	mana_regen_cooldown_timer = 3.0 # Wait 3 seconds after shooting before regen starts
+	
 	var p = PROJECTILES[projectile].instantiate() as Node3D
 	if is_multiplayer_authority():
 		p.collision_layer = (1 << 4)
 	else:
 		p.collision_layer = (1 << 3)
-	mana_reduction(p.power)
+		
 	p.col_point = col_point
 	p.start_point = start_point
 	get_tree().current_scene.add_child(p)
+	mana_reduction.rpc(p.power)
 	p.set_multiplayer_authority(Global.peer_id)
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_collider(projectile: String, start_point: Vector3, col_path: NodePath, start_basis:Basis):
-	is_mana_regen_fast = false
-	is_mana_regen_slow = false
-	mana_regen_cooldown_timer = 3
+	mana_regen_cooldown_timer = 3.0
 	var col = get_node_or_null(col_path)
 	var p = PROJECTILES[projectile].instantiate() as Node3D
 	print("multiplayer authority: ", is_multiplayer_authority())
@@ -271,6 +274,7 @@ func shoot_collider(projectile: String, start_point: Vector3, col_path: NodePath
 	p.start_point = start_point
 	p.start_basis = start_basis
 	get_tree().current_scene.add_child(p)
+	mana_reduction.rpc(p.power)
 	p.set_multiplayer_authority(Global.peer_id)
 
 @rpc("any_peer", "call_local", "reliable")
@@ -283,11 +287,12 @@ func take_damage(damage: float):
 		health_bar.value = player_health
 	
 @rpc("any_peer", "call_local", "reliable")
-func mana_reduction(val:float):
+func mana_reduction(val: float):
 	player_mana = clampf(player_mana - val, 0, max_mana)
+	mana_regen_cooldown_timer = 3.0 # Reset cooldown whenever mana is spent
 	if player_mana == 0:
-		print("no mana")
-	if is_multiplayer_authority():
+		print("No mana!")
+	if is_multiplayer_authority() and mana_bar:
 		mana_bar.max_value = max_mana
 		mana_bar.value = player_mana
 
@@ -302,37 +307,46 @@ func mana_regen_fast(delta:float) -> void:
 	if is_multiplayer_authority():
 		mana_bar.max_value = max_mana
 		mana_bar.value = player_mana
-	
-var is_mana_regen_slow:bool = false
-@rpc("any_peer", "call_local", "reliable")
-func mana_regen_slow(delta:float) -> void:
-	var val:float= 0.4
-	mana_regen_cooldown_timer = 5
-	player_mana = clampf(player_mana + val*delta, 0, max_mana)
-	val*=1.1
-	if player_mana == max_mana:
-		is_mana_regen_slow = false
-	if is_multiplayer_authority():
-		mana_bar.max_value = max_mana
-		mana_bar.value = player_mana
 
 func _physics_process(delta: float) -> void:
-	mana_regen_cooldown_timer -= delta
-	if delta == 0:
-		is_mana_regen_fast = true
-		is_mana_regen_slow = false
-		mana_regen_fast.rpc(delta)
-		print("regening mana")
 	if not is_multiplayer_authority():
 		return
+
+	# --- MANA REGENERATION LOGIC ---
+	# Decrement attack cooldown timer if active
+	if mana_regen_cooldown_timer > 0:
+		mana_regen_cooldown_timer -= delta
+
+	# Determine current regeneration rate based on state priority
+	if player_mana < max_mana:
+		var current_rate: float
+
+		if mana_regen_cooldown_timer > 0:
+			# 1. Slow regen while attack cooldown is active
+			current_rate = slow_mana_regen_rate
+		elif is_instance_valid(active_shield):
+			# 2. Medium regen while shield is up
+			current_rate = medium_mana_regen_rate
+		else:
+			# 3. High regen when idle / nothing active
+			current_rate = fast_mana_regen_rate
+
+		player_mana = clampf(player_mana + current_rate * delta, 0.0, max_mana)
+		
+		if mana_bar:
+			mana_bar.value = player_mana
+
+	# --- INPUT ACTIONS ---
 	if Input.is_action_just_pressed("shoot1"):
 		var col_point = get_col_point()
 		var start_point = fake_head.global_position + fake_head.global_basis * Vector3.FORWARD * 2
-		shoot.rpc("ZOLTRAAK", start_point, col_point, )
+		shoot.rpc("ZOLTRAAK", start_point, col_point)
+
 	if Input.is_action_just_pressed("shoot2"):
 		var col_point = get_col_point()
 		var start_point = fake_head.global_position + fake_head.global_basis * Vector3.FORWARD * 2
 		shoot.rpc("TORNADO", start_point, col_point)
+
 	if Input.is_action_just_pressed("shoot3"):
 		var col := crosshair_cone_cast()
 		var col_path: NodePath
@@ -341,14 +355,9 @@ func _physics_process(delta: float) -> void:
 		var start_point = fake_head.global_position
 		var start_basis = fake_head.global_basis
 		shoot_collider.rpc("BATK", start_point, col_path, start_basis)
-		print("testing man", collider)
+
 	if Input.is_action_just_pressed("shield"):
 		shield.rpc()
-		is_mana_regen_fast = false
-		is_mana_regen_slow = true
-		mana_regen_slow.rpc(delta)
-		
-		
 		
 	head.global_position = head.global_position.lerp(static_camera.global_position, 0.2)
 	head.global_basis = static_camera.global_basis

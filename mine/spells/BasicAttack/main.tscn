@@ -6,3 +6,4 @@
 [node name="basicatk" type="Node3D" unique_id=1183637238]
 script = ExtResource("1_lbemd")
 summon = ExtResource("2_alnag")
+power = 6.0
