@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dewrp1sblevh4"]
+
+[ext_resource type="Script" uid="uid://bgsxrhmihven8" path="res://mine/spells/dash.gd" id="1_y8f6s"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_28m0y"]
+radius = 3.0
+
+[node name="Dash" type="Area3D" unique_id=1459282256]
+collision_mask = 9
+script = ExtResource("1_y8f6s")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=948405728]
+shape = SubResource("SphereShape3D_28m0y")
+
+[node name="Timer" type="Timer" parent="." unique_id=414816053]
+
+[node name="Timer2" type="Timer" parent="." unique_id=1590098751]
+wait_time = 0.2
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="Timer2" to="." method="_on_timer_2_timeout"]

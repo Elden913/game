@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c4lbx4hy57og1" path="res://scripts/player.gd" id="1_ucva2"]
 [ext_resource type="ArrayMesh" uid="uid://2k853s5xcaf0" path="res://models/frieren.obj" id="2_g2els"]
 [ext_resource type="Shader" uid="uid://bwu78jttdkqo5" path="res://shaders/zoltraak.gdshader" id="2_qhqgy"]
+[ext_resource type="PackedScene" uid="uid://dewrp1sblevh4" path="res://mine/spells/dash.tscn" id="4_dqkch"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2nlrq"]
 render_priority = 0
@@ -64,3 +65,5 @@ spring_length = 5.0
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=754435816]
 replication_config = SubResource("SceneReplicationConfig_qhqgy")
+
+[node name="Dash" parent="." unique_id=1459282256 instance=ExtResource("4_dqkch")]

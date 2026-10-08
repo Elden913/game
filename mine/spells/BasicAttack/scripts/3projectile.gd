@@ -5,6 +5,7 @@ extends Area3D
 @export var max_turn_speed: float = 50.0
 @export var speed: float = 20.0
 @export var maxdist = 50
+@export var dmg:float = 5
 
 var targ: Node3D
 var t: float = 0.0
@@ -47,7 +48,7 @@ func _physics_process(delta: float) -> void:
 func _on_body_entered(body: Node3D) -> void:
 	if body.get_collision_layer_value(3):
 		if is_multiplayer_authority():
-			body.take_damage.rpc(6)
+			body.take_damage.rpc(dmg)
 	var fx = hitfx.instantiate()
 	get_tree().current_scene.add_child(fx)
 	fx.global_position = global_position

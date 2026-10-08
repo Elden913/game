@@ -69,7 +69,6 @@ var player_health: float = max_health
 var player_mana: float = max_mana
 
 
-
 var dash_speed: float = 30.0
 var dash_duration: float = 0.2
 var dash_timer: float = 0.0
@@ -79,6 +78,8 @@ var dash_direction: Vector3 = Vector3.ZERO
 
 var dash_cooldown: float = 2.0 # How many seconds before you can dash again
 var dash_cooldown_timer: float = 0.0
+
+var dash_untracking_toggle := false
 
 var mana_regen_cooldown_timer :float= 0.0
 var far:float = 100
@@ -90,6 +91,7 @@ var far:float = 100
 @onready var camera: Node3D = $Head/Camera3D
 @onready var collider: CollisionShape3D = $Collider
 @onready var raycast: RayCast3D = $Head/RayCast3D
+@onready var dash: Area3D = $Dash
 @onready var dash_bar
 @onready var health_bar
 @onready var mana_bar
@@ -99,6 +101,10 @@ var spawn_position: Vector3
 func _ready() -> void:
 	global_position = spawn_position
 	
+	if is_multiplayer_authority():
+		dash.collision_mask = 1 << 3
+	else:
+		dash.collision_mask = 1 << 4
 	$Head/Camera3D.current = is_multiplayer_authority()
 	if not is_multiplayer_authority():
 		return
@@ -287,14 +293,17 @@ func shoot_collider(projectile: String, start_point: Vector3, col_path: NodePath
 		p.set_multiplayer_authority(Global.peer_id)
 	else: p.queue_free()
 
+var can_take_damage = true
 @rpc("any_peer", "call_local", "reliable")
 func take_damage(damage: float):
-	player_health = clampf(player_health-damage, 0, max_health)
-	if player_health == 0:
-		print("I died")
-	if is_multiplayer_authority():
-		health_bar.max_value = max_health
-		health_bar.value = player_health
+	if can_take_damage:
+		player_health = clampf(player_health-damage, 0, max_health)
+		if player_health == 0:
+			print("I died")
+		if is_multiplayer_authority():
+			health_bar.max_value = max_health
+			health_bar.value = player_health
+	else: print("no dmg")
 	
 @rpc("any_peer", "call_local", "reliable")
 func mana_reduction(val: float):
@@ -437,6 +446,7 @@ func _physics_process(delta: float) -> void:
 			dash_direction = -transform.basis.z
 	
 	if not is_dashing:
+		dash_untracking_toggle = false
 		# --- YOUR NORMAL MOVEMENT OVERRIDDEN BY DASH ---
 		if can_move:
 			var input_dir := Input.get_vector(input_left, input_right, input_forward, input_back)
@@ -455,6 +465,9 @@ func _physics_process(delta: float) -> void:
 		# We strictly override X and Z, leaving Y alone so gravity/jumping still apply mid-dash
 		vel.x = dash_direction.x * dash_speed
 		vel.z = dash_direction.z * dash_speed
+		if not dash_untracking_toggle:
+			dash.start_dashing.rpc()
+		dash_untracking_toggle = true
 	
 	velocity = vel
 	
