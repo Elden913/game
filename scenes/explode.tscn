@@ -37,7 +37,7 @@ emission_curve = SubResource("CurveTexture_bgo6b")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n41u6"]
 vertex_color_use_as_albedo = true
-albedo_color = Color(0.8570899, 0.50000495, 0.6249565, 1)
+albedo_color = Color(2.695322e-06, 0.72917795, 0.8474507, 1)
 emission_enabled = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_vymrk"]

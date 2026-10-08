@@ -21,7 +21,7 @@ scale_curve = SubResource("CurveTexture_0b2bf")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2t8c6"]
 emission_enabled = true
-emission = Color(1, 0.31764707, 0.4627451, 1)
+emission = Color(0, 0.6695783, 0.80621666, 1)
 emission_energy_multiplier = 8.0
 disable_receive_shadows = true
 
