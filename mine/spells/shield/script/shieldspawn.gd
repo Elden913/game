@@ -52,6 +52,7 @@ func _spawn_shield(pos: Vector3, powerr: int, rad: float) -> void:
 		
 	var Shi = Shield.instantiate() as Node3D
 	shieldpower -= powerr
+	Shi.parent_collision_mask = collision_mask
 	get_tree().current_scene.add_child(Shi)
 	blocked.append(Shi)
 	Shi.global_position = pos
@@ -66,6 +67,7 @@ func _spawn_shield(pos: Vector3, powerr: int, rad: float) -> void:
 	Shi.rotate_object_local(Vector3.RIGHT, deg_to_rad(90))
 	Shi.nodelete = nodelete
 	Shi.nodelete.append(self)
+	
 
 	if particles:
 		particles.restart()
