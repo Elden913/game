@@ -8,7 +8,7 @@ func spawn_func(p: Array) -> Node3D:
 	var ps = PLAYER_SCENE.instantiate() as Node3D
 	print("name", name)
 	ps.spawn_position = Vector3(p[2].x, 3, p[2].y)
-	ps.get_node("Name").mesh.text = p[1]
+	ps.get_node("Name").text = p[1]
 	ps.set_multiplayer_authority(p[0])
 	return ps
 

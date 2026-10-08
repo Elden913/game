@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://8lwn824ffjtd"]
 
 [ext_resource type="PackedScene" uid="uid://bk38dky7nll01" path="res://mine/spells/shield/scene/main.tscn" id="1_84nrc"]
-[ext_resource type="PackedScene" uid="uid://dx820hoo51613" path="res://mine/spells/shield/scene/parts/Brokenpart.tscn" id="2_ce6vb"]
 [ext_resource type="Script" uid="uid://gjwtb44td2sh" path="res://mine/spells/shield/script/area_3d.gd" id="3_t0vfo"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_33cqm"]
@@ -36,10 +35,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.829773, 10.937122)
 
 [node name="shieldcollide" parent="." unique_id=114182786 instance=ExtResource("1_84nrc")]
 collision_mask = 3
-Broken = ExtResource("2_ce6vb")
 
 [node name="Area3D" type="Area3D" parent="." unique_id=1104158671]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.359697, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.4298573, 0, 0)
 collision_mask = 3
 script = ExtResource("3_t0vfo")
 power = 1
