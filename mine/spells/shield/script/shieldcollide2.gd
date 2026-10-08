@@ -1,10 +1,11 @@
-extends RigidBody3D
+extends Area3D
 
 @onready var timer: Timer = $Timer
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 @onready var particles: GPUParticles3D = $GPUParticles3D
 
 var particle_mat: StandardMaterial3D
+var nodelete:Node3D
 
 func _ready() -> void:
 	timer.timeout.connect(_on_timer_timeout)
@@ -21,13 +22,15 @@ func _ready() -> void:
 		if collision_shape.shape is BoxShape3D:
 			var side_length: float = ceil(pow(particles.amount, 1.0 / 3.0))
 			collision_shape.shape.size += Vector3(side_length, 0.0, side_length)
+			
+func _physics_process(delta: float) -> void:
+	for i in get_overlapping_areas():
+		if i != nodelete:
+			i.queue_free()
 
 func _on_timer_timeout() -> void:
 	if particle_mat:
 		print("hi")
-		var tween = create_tween()
-		# Use "emission" (Color), NOT "emission_color"
-		tween.tween_property(particle_mat, "emission", Color(0.0, 0.0, 0.0, 1.0), 0.1)
-		tween.tween_callback(queue_free)
+		queue_free()
 	else:
 		queue_free()

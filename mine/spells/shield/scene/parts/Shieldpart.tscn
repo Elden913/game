@@ -6,9 +6,8 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_kdmil"]
 size = Vector3(5, 0.5, 5)
 
-[node name="RigidBody3D" type="RigidBody3D" unique_id=428721536]
+[node name="RigidBody3D" type="Area3D" unique_id=140198106]
 collision_mask = 3
-gravity_scale = 0.0
 script = ExtResource("1_l87d5")
 
 [node name="GPUParticles3D" parent="." unique_id=809403878 instance=ExtResource("2_inm1a")]
@@ -18,3 +17,4 @@ amount = 80
 shape = SubResource("BoxShape3D_kdmil")
 
 [node name="Timer" type="Timer" parent="." unique_id=15545173]
+wait_time = 0.5
