@@ -114,6 +114,7 @@ func _ready() -> void:
 	health_bar.max_value = max_health
 	health_bar.value = player_health
 	mana_bar = get_tree().current_scene.get_node("UI/ManaBar")
+	mana_bar.max_value = max_mana
 	mana_bar.value = max_mana
 	dash_bar = get_tree().current_scene.get_node("UI/DashCooldown")
 	dash_bar.max_value = dash_cooldown
@@ -232,6 +233,9 @@ func crosshair_cone_cast(crosshair_angle_degrees: float = 1) -> Node3D:
 
 var active_shield: Node = null
 
+
+
+
 @rpc("any_peer", "call_local", "reliable")
 func shield():
 	if is_instance_valid(active_shield):
@@ -254,16 +258,34 @@ func _on_shield_timer_timeout(sh_instance) -> void:
 		active_shield.queue_free()
 		active_shield = null
 
-@rpc("any_peer", "call_local", "reliable")
-func shoot(projectile: String, start_point: Vector3, col_point: Vector3):
+# 1. LOCAL FUNCTION: Checks mana and deducts it
+func attempt_shoot(projectile: String, start_point: Vector3, col_point: Vector3):
+	# Temporarily instance to get the mana cost
 	var p = PROJECTILES[projectile].instantiate() as Node3D
+	var cost = p.power
+	p.queue_free()
+	
+	# Check local mana
+	if player_mana >= cost:
+		mana_reduction(cost) # Deduct mana locally
+		# Tell the network to spawn the projectile
+		spawn_projectile.rpc(projectile, start_point, col_point)
+
+
+# 2. RPC FUNCTION: Nobody checks mana here, they just spawn the node
+@rpc("any_peer", "call_local", "reliable")
+func spawn_projectile(projectile: String, start_point: Vector3, col_point: Vector3):
+	var p = PROJECTILES[projectile].instantiate() as Node3D
+	
 	if is_multiplayer_authority():
 		p.collision_layer = (1 << 4)
 	else:
 		p.collision_layer = (1 << 3)
+
 	p.col_point = col_point
 	p.start_point = start_point
 	p.authority = Global.peer_id
+	
 	get_tree().current_scene.add_child(p)
 	if p.power <= player_mana:
 		mana_regen_cooldown_timer = 3.0
@@ -273,50 +295,61 @@ func shoot(projectile: String, start_point: Vector3, col_point: Vector3):
 		print("no mana lmao")
 		p.queue_free()
 
+func mana_reduction(val: float):
+	player_mana = clampf(player_mana - val, 0, max_mana)
+	mana_regen_cooldown_timer = 3.0
+	# Update UI only for the local player controlling this character
+	if is_multiplayer_authority() and mana_bar:
+		mana_bar.value = player_mana
+# 1. LOCAL FUNCTION: Checks mana and deducts it locally
+func attempt_shoot_collider(projectile: String, start_point: Vector3, col_path: NodePath, start_basis: Basis):
+	# Temporarily instance to get the mana cost
+	var p = PROJECTILES[projectile].instantiate() as Node3D
+	var cost = p.power
+	p.queue_free()
+	
+	# Check local mana
+	if player_mana >= cost:
+		mana_reduction(cost) # Your local function already handles the cooldown timer!
+		# Tell the network to spawn the projectile
+		spawn_collider_projectile.rpc(projectile, start_point, col_path, start_basis)
+
+# 2. RPC FUNCTION: Nobody checks mana here, they just spawn the node
 @rpc("any_peer", "call_local", "reliable")
-func shoot_collider(projectile: String, start_point: Vector3, col_path: NodePath, start_basis:Basis):
+func spawn_collider_projectile(projectile: String, start_point: Vector3, col_path: NodePath, start_basis: Basis):
 	var col = get_node_or_null(col_path)
 	var p = PROJECTILES[projectile].instantiate() as Node3D
-	print("multiplayer authority: ", is_multiplayer_authority())
+	
 	if is_multiplayer_authority():
 		p.collision_layer = (1 << 4)
 	else:
 		p.collision_layer = (1 << 3)
+		
 	p.col = col
 	p.start_point = start_point
 	p.start_basis = start_basis
 	p.authority = Global.peer_id
+	
 	get_tree().current_scene.add_child(p)
-	if p.power <= player_mana:
-		mana_regen_cooldown_timer = 3.0
-		mana_reduction.rpc(p.power)
+	
+	# Only the controlling player takes network ownership of the new node
+	if is_multiplayer_authority():
 		p.set_multiplayer_authority(Global.peer_id)
-	else: p.queue_free()
-
-var can_take_damage = true
 @rpc("any_peer", "call_local", "reliable")
 func take_damage(damage: float):
-	if can_take_damage:
-		player_health = clampf(player_health-damage, 0, max_health)
-		if player_health == 0:
-			print("I died")
+	player_health = clampf(player_health-damage, 0, max_health)
+	if player_health == 0:
+		# FOR 1V1 ONLY
 		if is_multiplayer_authority():
-			health_bar.max_value = max_health
-			health_bar.value = player_health
-	else: print("no dmg")
-	
-@rpc("any_peer", "call_local", "reliable")
-func mana_reduction(val: float):
-	player_mana = clampf(player_mana - val, 0, max_mana)
-	mana_regen_cooldown_timer = 3.0 # Reset cooldown whenever mana is spent
-	if player_mana == 0:
-		print("No mana!")
-	if is_multiplayer_authority() and mana_bar:
-		mana_bar.max_value = max_mana
-		mana_bar.value = player_mana
-
+			get_tree().current_scene.get_node("UI/win").visible = false
+			get_tree().current_scene.get_node("UI/lost").visible = true
+		else:
+			get_tree().current_scene.get_node("UI/win").visible = true
+			get_tree().current_scene.get_node("UI/lost").visible = false
+	if is_multiplayer_authority():
+		health_bar.max_value = max_health
+		health_bar.value = player_health
 var is_mana_regen_fast:bool = false
-@rpc("any_peer", "call_local", "reliable")
 func mana_regen_fast(delta:float) -> void:
 	var val:float= 1
 	player_mana = clampf(player_mana + val*delta, 0, max_mana)
@@ -326,6 +359,25 @@ func mana_regen_fast(delta:float) -> void:
 	if is_multiplayer_authority():
 		mana_bar.max_value = max_mana
 		mana_bar.value = player_mana
+
+@export var spell_spawn_offset: float = 3.0
+
+func _get_random_spell_offset() -> Vector3:
+	return Vector3(
+		randf_range(-spell_spawn_offset, spell_spawn_offset),
+		randf_range(0.2, spell_spawn_offset),
+		randf_range(-spell_spawn_offset, -0.1)
+	)
+
+func _calculate_spell_start_pos(base_pos: Vector3, look_basis: Basis) -> Vector3:
+	var offset = _get_random_spell_offset()
+	
+	# The distance from base_pos to (base_pos + offset) is just offset.length()
+	if offset.length() <= 3.0:
+		offset = _get_random_spell_offset()
+		
+	# Multiply by look_basis so it spawns perfectly relative to your camera view!
+	return base_pos + (look_basis * offset)
 
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority():
@@ -359,24 +411,32 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("shoot1"):
 		var col_point = get_col_point()
 		var start_point = fake_head.global_position + fake_head.global_basis * Vector3.FORWARD * 2
-		shoot.rpc("ZOLTRAAK", start_point, col_point)
-
+		# Call this locally!
+		attempt_shoot("ZOLTRAAK", start_point, col_point)
 	if Input.is_action_just_pressed("shoot2"):
 		var col_point = get_col_point()
 		var start_point = fake_head.global_position + fake_head.global_basis * Vector3.FORWARD * 2
-		shoot.rpc("TORNADO", start_point, col_point)
-
+		# Call this locally!
+		attempt_shoot("TORNADO", start_point, col_point)
 	if Input.is_action_just_pressed("shoot3"):
 		var col := crosshair_cone_cast()
 		var col_path: NodePath
 		if col:
 			col_path = col.get_path()
-		var start_point = fake_head.global_position
+			
+		var base_point = fake_head.global_position
 		var start_basis = fake_head.global_basis
-		shoot_collider.rpc("BATK", start_point, col_path, start_basis)
-
+		
+		# Calculate the final randomized start_pos right here!
+		var start_pos = _calculate_spell_start_pos(base_point, start_basis)
+		
+		# Pass the calculated start_pos in place of the old start_point
+		attempt_shoot_collider("BATK", start_pos, col_path, start_basis)
 	if Input.is_action_just_pressed("shield"):
 		shield.rpc()
+	if Input.is_action_just_pressed("reset_game"):
+		release_mouse()
+		Global.load_game.rpc("res://scenes/room.tscn")
 		
 	head.global_position = head.global_position.lerp(static_camera.global_position, 0.2)
 	head.global_basis = static_camera.global_basis
