@@ -47,7 +47,7 @@ func _physics_process(delta: float) -> void:
 func _on_body_entered(body: Node3D) -> void:
 	if body.get_collision_layer_value(3):
 		if is_multiplayer_authority():
-			body.take_damage.rpc(10)
+			body.take_damage.rpc(6)
 	var fx = hitfx.instantiate()
 	get_tree().current_scene.add_child(fx)
 	fx.global_position = global_position

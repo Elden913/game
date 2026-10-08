@@ -17,6 +17,7 @@ func _ready() -> void:
 	pass
 
 func _physics_process(_delta: float) -> void:
+	shieldpower = plr.player_mana
 	var objects = get_overlapping_areas()
 	
 	# If nothing is overlapping yet, keep waiting

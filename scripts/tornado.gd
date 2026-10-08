@@ -47,7 +47,7 @@ func _on_body_entered(body: Node3D):
 	print("hit something niger")
 	if body.get_collision_layer_value(3):
 		if is_multiplayer_authority():
-			body.take_damage.rpc(10)
+			body.take_damage.rpc(30)
 		
 	has_hit = true
 	

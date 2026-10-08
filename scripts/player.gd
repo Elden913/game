@@ -250,24 +250,25 @@ func _on_shield_timer_timeout(sh_instance) -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot(projectile: String, start_point: Vector3, col_point: Vector3):
-	mana_regen_cooldown_timer = 3.0 # Wait 3 seconds after shooting before regen starts
-	
 	var p = PROJECTILES[projectile].instantiate() as Node3D
 	if is_multiplayer_authority():
 		p.collision_layer = (1 << 4)
 	else:
 		p.collision_layer = (1 << 3)
-		
 	p.col_point = col_point
 	p.start_point = start_point
 	p.authority = Global.peer_id
 	get_tree().current_scene.add_child(p)
-	mana_reduction.rpc(p.power)
-	p.set_multiplayer_authority(Global.peer_id)
+	if p.power <= player_mana:
+		mana_regen_cooldown_timer = 3.0
+		mana_reduction.rpc(p.power)
+		p.set_multiplayer_authority(Global.peer_id)
+	else: 
+		print("no mana lmao")
+		p.queue_free()
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_collider(projectile: String, start_point: Vector3, col_path: NodePath, start_basis:Basis):
-	mana_regen_cooldown_timer = 3.0
 	var col = get_node_or_null(col_path)
 	var p = PROJECTILES[projectile].instantiate() as Node3D
 	print("multiplayer authority: ", is_multiplayer_authority())
@@ -280,8 +281,11 @@ func shoot_collider(projectile: String, start_point: Vector3, col_path: NodePath
 	p.start_basis = start_basis
 	p.authority = Global.peer_id
 	get_tree().current_scene.add_child(p)
-	mana_reduction.rpc(p.power)
-	p.set_multiplayer_authority(Global.peer_id)
+	if p.power <= player_mana:
+		mana_regen_cooldown_timer = 3.0
+		mana_reduction.rpc(p.power)
+		p.set_multiplayer_authority(Global.peer_id)
+	else: p.queue_free()
 
 @rpc("any_peer", "call_local", "reliable")
 func take_damage(damage: float):
