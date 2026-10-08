@@ -1,0 +1,142 @@
+[gd_scene format=3 uid="uid://nj34wptjxg7r"]
+
+[ext_resource type="PackedScene" uid="uid://bs72ogkvdd7d6" path="res://scenes/player.tscn" id="1_4mooy"]
+[ext_resource type="Texture2D" uid="uid://blq0x1or02ws" path="res://textures/crosshair.png" id="2_41njt"]
+[ext_resource type="Script" uid="uid://bpvqaaphdray2" path="res://scripts/health_bar.gd" id="3_ihjbc"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_d11wm"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_gldnj"]
+sky_material = SubResource("ProceduralSkyMaterial_d11wm")
+
+[sub_resource type="Environment" id="Environment_41njt"]
+background_mode = 2
+sky = SubResource("Sky_gldnj")
+glow_enabled = true
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_1mbua"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ts7by"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_pf262"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_5rwec"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bfesb"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.059649874, 0.059649874, 0.059649874, 0.4745098)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cqppn"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.8784314, 0, 0, 0.7529412)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 6
+
+[node name="Playertesting" type="Node3D" unique_id=1712967484]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=463348642]
+environment = SubResource("Environment_41njt")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1264873716]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1270830344]
+transform = Transform3D(360.1808, 0, 0, 0, 0.99999976, 0, 0, 0, -122.52617, 0, -0.6906802, 0)
+use_collision = true
+
+[node name="Player" parent="." unique_id=168906038 instance=ExtResource("1_4mooy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4941968, 0, 0.4306667)
+
+[node name="UI" type="Control" parent="." unique_id=307538778]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="UI" unique_id=1576260443]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -19.99997
+offset_right = 780.0
+offset_bottom = 780.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.05, 0.05)
+offset_transform_position_ratio = Vector2(-0.5, -0.5)
+mouse_filter = 2
+texture = ExtResource("2_41njt")
+
+[node name="HealthBar" type="HSlider" parent="UI" unique_id=2051493526]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.497
+anchor_top = 0.84400004
+anchor_right = 0.497
+anchor_bottom = 0.84400004
+offset_left = -277.544
+offset_top = -49.91205
+offset_right = 278.456
+offset_bottom = 50.08795
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_icons/grabber = SubResource("PlaceholderTexture2D_1mbua")
+theme_override_icons/grabber_highlight = SubResource("PlaceholderTexture2D_ts7by")
+theme_override_icons/grabber_disabled = SubResource("PlaceholderTexture2D_pf262")
+theme_override_icons/tick = SubResource("PlaceholderTexture2D_5rwec")
+theme_override_styles/slider = SubResource("StyleBoxFlat_bfesb")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_cqppn")
+value = 100.0
+editable = false
+script = ExtResource("3_ihjbc")
+metadata/_edit_use_anchors_ = true
+
+[node name="DashCooldown" type="ProgressBar" parent="UI" unique_id=282564575]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.91300005
+anchor_right = 0.5
+anchor_bottom = 0.91300005
+offset_left = -239.0
+offset_top = -13.624023
+offset_right = 239.0
+offset_bottom = 13.375977
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="CSGTorus3D" type="CSGTorus3D" parent="." unique_id=970394498]
+transform = Transform3D(1, 0, 0, 0, 3.1000001, 0, 0, 0, 1, 0, 0, -6)
+
+[node name="CSGTorus3D2" type="CSGTorus3D" parent="." unique_id=902731675]
+transform = Transform3D(1, 0, 0, 0, 3.1000001, 0, 0, 0, 1, 2, 0, -2)
+
+[node name="CSGTorus3D3" type="CSGTorus3D" parent="." unique_id=1991676070]
+transform = Transform3D(1, 0, 0, 0, 3.1000001, 0, 0, 0, 1, -5.315878, -1.1920929e-07, -2.6728494)
+
+[node name="CSGTorus3D4" type="CSGTorus3D" parent="." unique_id=1687444862]
+transform = Transform3D(1, 0, 0, 0, 3.1000001, 0, 0, 0, 1, 0.3108778, -1.1920929e-07, 1.7880528)

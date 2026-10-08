@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://nhdcx75lajki"]
+
+[ext_resource type="Script" uid="uid://21ns3wi7l0ka" path="res://scripts/zoltraak.gd" id="1_ao876"]
+[ext_resource type="Material" uid="uid://wmpvkawup2nb" path="res://materials/ray.tres" id="2_ao876"]
+[ext_resource type="Material" uid="uid://gco3rayean1j" path="res://materials/magic circle material.tres" id="3_chhyo"]
+
+[sub_resource type="Curve" id="Curve_gvr5v"]
+_data = [Vector2(0, 0.107797146), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_bjh7m"]
+resource_local_to_scene = true
+material = ExtResource("2_ao876")
+radius = 0.25
+height = 0.5
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gvr5v"]
+height = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_wvusm"]
+resource_local_to_scene = true
+material = ExtResource("3_chhyo")
+
+[node name="zoltraak" type="Area3D" unique_id=2065102465]
+collision_layer = 8
+collision_mask = 7
+script = ExtResource("1_ao876")
+magic_circle_curve = SubResource("Curve_gvr5v")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1749789251]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.003, 0, 0.005)
+cast_shadow = 0
+mesh = SubResource("CapsuleMesh_bjh7m")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1224517723]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_gvr5v")
+
+[node name="MagicCircle" type="MeshInstance3D" parent="." unique_id=558988105]
+transform = Transform3D(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.51478976)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_wvusm")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

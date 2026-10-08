@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dx820hoo51613"]
+
+[ext_resource type="PackedScene" uid="uid://dlvxixxjsd0u3" path="res://mine/spells/shield/scene/particles/broken.tscn" id="2_p1bxt"]
+
+[node name="Shieldpart" type="Area3D" unique_id=259321389]
+
+[node name="GPUParticles3D" parent="." unique_id=1658055797 instance=ExtResource("2_p1bxt")]
+amount = 70
+explosiveness = 0.0

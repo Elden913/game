@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://5sby8ty0qgn"]
+
+[ext_resource type="Texture2D" uid="uid://cqakp2jp25bln" path="res://textures/Raise_Zombie_glow.webp" id="1_eapmt"]
+
+[sub_resource type="Curve" id="Curve_l7ljs"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.32258064, 1), 1.7613635, 1.7613635, 0, 0, Vector2(0.74731183, 1), -1.8452379, -1.8452379, 0, 0, Vector2(0.9731183, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_fwe26"]
+curve = SubResource("Curve_l7ljs")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ohbbn"]
+use_rotation_velocity_3d = true
+rotation_velocity_3d_min = Vector3(0, 200, 0)
+rotation_velocity_3d_max = Vector3(0, 200, 0)
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_fwe26")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ohbbn"]
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("1_eapmt")
+emission_enabled = true
+emission = Color(1, 0.6507289, 0.7028097, 1)
+emission_energy_multiplier = 3.6
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_28m0y"]
+material = SubResource("StandardMaterial3D_ohbbn")
+size = Vector2(5, 5)
+
+[sub_resource type="Curve" id="Curve_arvpe"]
+_data = [Vector2(0.032258064, 1), 0.0, 0.27678576, 0, 0, Vector2(0.26344085, 1), 0.0, 0.0, 0, 0, Vector2(0.7741935, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_cr76u"]
+curve = SubResource("Curve_arvpe")
+
+[sub_resource type="Curve" id="Curve_4q2e7"]
+_limits = [0.0, 10.0, 0.0, 1.0]
+_data = [Vector2(0, 0.080357194), 0.0, 0.0, 0, 0, Vector2(1, 5.1785717), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_s2gpv"]
+curve = SubResource("Curve_4q2e7")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fwe26"]
+emission_shape_offset = Vector3(0, 0.5, 0)
+emission_shape_scale = Vector3(2, 1, 2)
+emission_shape = 1
+emission_sphere_radius = 1.0
+spread = 180.0
+gravity = Vector3(0, 5, 0)
+scale_curve = SubResource("CurveTexture_s2gpv")
+alpha_curve = SubResource("CurveTexture_cr76u")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_elmjn"]
+transparency = 1
+vertex_color_use_as_albedo = true
+emission_enabled = true
+emission = Color(1, 0.70270795, 0.5758921, 1)
+emission_energy_multiplier = 9.15
+
+[sub_resource type="SphereMesh" id="SphereMesh_28m0y"]
+material = SubResource("StandardMaterial3D_elmjn")
+radius = 0.05
+height = 0.1
+
+[node name="arcane" type="Node3D" unique_id=884342125]
+
+[node name="arcane1" type="GPUParticles3D" parent="." unique_id=1738278802]
+emitting = false
+amount = 1
+lifetime = 2.0
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_ohbbn")
+draw_pass_1 = SubResource("PlaneMesh_28m0y")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=260499358]
+light_color = Color(0.99999994, 0.24993685, 0.34377846, 1)
+light_energy = 3.286
+
+[node name="arcane2" type="GPUParticles3D" parent="." unique_id=77903581]
+emitting = false
+one_shot = true
+explosiveness = 0.6
+randomness = 0.41
+process_material = SubResource("ParticleProcessMaterial_fwe26")
+draw_pass_1 = SubResource("SphereMesh_28m0y")

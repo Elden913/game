@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://d1kiyc8g80amh"]
+
+[ext_resource type="Script" uid="uid://bkk6pls35vif6" path="res://mine/spells/BasicAttack/scripts/particle_b_aspawn.gd" id="1_lp13v"]
+[ext_resource type="Texture2D" uid="uid://d236kh0hag4nr" path="res://mine/textures/zoltraak magic circle.png" id="1_po2ec"]
+[ext_resource type="PackedScene" uid="uid://cpgeea6lml2ox" path="res://mine/spells/BasicAttack/scenes/econc.tscn" id="2_ek6t6"]
+[ext_resource type="PackedScene" uid="uid://c67n611xoqjt4" path="res://mine/spells/BasicAttack/scenes/ba_projectile.tscn" id="2_s6nwi"]
+[ext_resource type="Script" uid="uid://yuy0y0t2ph1v" path="res://mine/spells/BasicAttack/scripts/particle_b_aenergy.gd" id="3_s6nwi"]
+[ext_resource type="PackedScene" uid="uid://2lbop7lcnoad" path="res://mine/spells/BasicAttack/scenes/particle_BAenergy.tscn" id="4_po2ec"]
+
+[sub_resource type="Curve" id="Curve_s2gpv"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.43548384, 1), 0.0, 0.0, 0, 0, Vector2(0.6774193, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_elmjn"]
+curve_z = SubResource("Curve_s2gpv")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_h0nvb"]
+use_rotation_velocity_3d = true
+rotation_velocity_3d_min = Vector3(0, 0, 700)
+rotation_velocity_3d_max = Vector3(0, 0, 700)
+rotation_velocity_3d_curve = SubResource("CurveXYZTexture_elmjn")
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d88vu"]
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("1_po2ec")
+emission_enabled = true
+emission = Color(1, 0.7655037, 0.49010885, 1)
+emission_energy_multiplier = 3.5
+emission_on_uv2 = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_n64jt"]
+material = SubResource("StandardMaterial3D_d88vu")
+size = Vector2(0.9, 0.9)
+
+[node name="BAspawner" type="GPUParticles3D" unique_id=94730493]
+emitting = false
+amount = 1
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_h0nvb")
+draw_pass_1 = SubResource("QuadMesh_n64jt")
+script = ExtResource("1_lp13v")
+projectile = ExtResource("2_s6nwi")
+
+[node name="Timer" type="Timer" parent="." unique_id=2033391079]
+wait_time = 0.9
+
+[node name="Econc" parent="." unique_id=2102897030 instance=ExtResource("2_ek6t6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.038, 0, -0.25)
+emitting = false
+one_shot = true
+script = ExtResource("3_s6nwi")
+
+[node name="energyparticles" parent="." unique_id=129823846 instance=ExtResource("4_po2ec")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.022, 0, -0.25)
+one_shot = true
+script = ExtResource("3_s6nwi")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

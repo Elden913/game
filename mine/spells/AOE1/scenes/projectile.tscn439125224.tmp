@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://b0pvgs3of8dca"]
+
+[ext_resource type="Script" uid="uid://buwf7cxj7xiqn" path="res://spells/AOE1/scripts/projectile.gd" id="1_k31h0"]
+[ext_resource type="PackedScene" uid="uid://ddx8dfkbnobn1" path="res://spells/AOE1/scenes/particles/explode.tscn" id="2_yspu5"]
+[ext_resource type="PackedScene" uid="uid://c5hcx70m8aplo" path="res://spells/AOE1/scenes/particles/trail.tscn" id="4_vb2k2"]
+[ext_resource type="PackedScene" uid="uid://cvt6olouxu5qh" path="res://spells/AOE1/scenes/particles/smoke1.tscn" id="5_8p2p5"]
+[ext_resource type="PackedScene" uid="uid://c87o4d8grslfs" path="res://spells/AOE1/scenes/particles/smoke2.tscn" id="6_aluhu"]
+[ext_resource type="Shader" uid="uid://ce2di2jtcnkg0" path="res://shaders/projectile.gdshader" id="7_12yme"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ohbbn"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eji0e"]
+render_priority = 0
+shader = ExtResource("7_12yme")
+shader_parameter/core_color = Color(1, 1, 1, 1)
+shader_parameter/glow_color = Color(1, 0, 0, 1)
+shader_parameter/glow_intensity = 5.0
+shader_parameter/glow_power = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_ohbbn"]
+material = SubResource("ShaderMaterial_eji0e")
+radius = 0.25
+height = 0.5
+
+[node name="Area3D2" type="Area3D" unique_id=1175037477]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -3.988554, 0, 0)
+collision_layer = 0
+script = ExtResource("1_k31h0")
+acc = 1.0
+explosion_scene = ExtResource("2_yspu5")
+spark_scene = ExtResource("2_yspu5")
+trail_scene = ExtResource("4_vb2k2")
+smoke_scene1 = ExtResource("5_8p2p5")
+smoke_scene2 = ExtResource("6_aluhu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1253484497]
+shape = SubResource("SphereShape3D_ohbbn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1392778466]
+mesh = SubResource("SphereMesh_ohbbn")
+
+[node name="Timer" type="Timer" parent="." unique_id=1657439954]
+wait_time = 10.0
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=2144089230]
+light_color = Color(0.99999994, 0.26648247, 0.34169796, 1)
+light_energy = 2.0
+shadow_enabled = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

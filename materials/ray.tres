@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://wmpvkawup2nb"]
+
+[ext_resource type="Shader" uid="uid://bwu78jttdkqo5" path="res://shaders/zoltraak.gdshader" id="1_4ph2x"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_4ph2x")
+shader_parameter/core_color = Color(1, 1, 1, 1)
+shader_parameter/glow_color = Color(0, 0.5, 1, 1)
+shader_parameter/glow_intensity = 5.0
+shader_parameter/glow_power = 2.0

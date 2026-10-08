@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://jixvchnbo1jb"]
+
+[ext_resource type="Script" uid="uid://ce0jp85diwib7" path="res://scripts/room.gd" id="1_88gup"]
+
+[node name="Room" type="Node3D" unique_id=322257999]
+script = ExtResource("1_88gup")
+
+[node name="Control" type="Control" parent="." unique_id=514074577]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Button" type="Button" parent="Control" unique_id=510744161]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 14.962001
+anchor_top = 8.0
+anchor_right = 14.962001
+anchor_bottom = 8.0
+offset_left = -214.48004
+offset_top = -56.0
+offset_right = 214.51996
+offset_bottom = 58.0
+theme_override_font_sizes/font_size = 30
+text = "START THE GAME"
+
+[node name="ItemList" type="ItemList" parent="Control" unique_id=1902610952]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 15.487
+anchor_top = 11.925
+anchor_right = 15.487
+anchor_bottom = 11.925
+offset_left = -151.48004
+offset_top = -77.0
+offset_right = 151.51996
+offset_bottom = 77.0
+theme_override_font_sizes/font_size = 30
+
+[node name="IPLabel" type="Label" parent="Control" unique_id=1434268104]
+layout_mode = 0
+offset_left = 114.0
+offset_top = 347.0
+offset_right = 293.0
+offset_bottom = 448.0
+theme_override_font_sizes/font_size = 30
+
+[connection signal="pressed" from="Control/Button" to="." method="_on_button_pressed"]

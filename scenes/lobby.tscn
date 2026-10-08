@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://mgp02mkor0at"]
+
+[ext_resource type="Script" uid="uid://b74aq41vgfphe" path="res://scripts/node_3d.gd" id="1_xrgmn"]
+[ext_resource type="Script" uid="uid://tm3tng57twac" path="res://scripts/ui.gd" id="2_2wvic"]
+
+[node name="Node3D" type="Node3D" unique_id=1868899030]
+script = ExtResource("1_xrgmn")
+
+[node name="Control" type="Control" parent="." unique_id=771097470]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_2wvic")
+
+[node name="IPTextEdit" type="TextEdit" parent="Control" unique_id=1679280138]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 14.887001
+anchor_top = 5.4
+anchor_right = 14.887001
+anchor_bottom = 5.4
+offset_left = -177.48004
+offset_top = -137.0
+offset_right = 177.51996
+offset_bottom = -59.0
+theme_override_font_sizes/font_size = 30
+placeholder_text = "IP address..."
+
+[node name="NameTextEdit" type="TextEdit" parent="Control" unique_id=675576862]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 14.887001
+anchor_top = 5.4
+anchor_right = 14.887001
+anchor_bottom = 5.4
+offset_left = -177.48004
+offset_top = -39.0
+offset_right = 177.51996
+offset_bottom = 39.0
+theme_override_font_sizes/font_size = 30
+placeholder_text = "Name..."
+
+[node name="Server button" type="Button" parent="Control" unique_id=1363517170]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 14.887001
+anchor_top = 12.05
+anchor_right = 14.887001
+anchor_bottom = 12.05
+offset_left = -177.48004
+offset_top = -52.0
+offset_right = 177.51996
+offset_bottom = 52.0
+theme_override_font_sizes/font_size = 50
+text = "Server"
+
+[node name="Client button" type="Button" parent="Control" unique_id=1967943127]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 14.887001
+anchor_top = 8.425
+anchor_right = 14.887001
+anchor_bottom = 8.425
+offset_left = -177.48004
+offset_top = -52.0
+offset_right = 177.51996
+offset_bottom = 52.0
+theme_override_font_sizes/font_size = 50
+text = "Client"
+
+[connection signal="pressed" from="Control/Server button" to="Control" method="_on_server_button_pressed"]
+[connection signal="pressed" from="Control/Client button" to="Control" method="_on_client_button_pressed"]

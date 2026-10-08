@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://c87o4d8grslfs"]
+
+[ext_resource type="Shader" path="res://shaders/as.tres" id="1_2dnit"]
+[ext_resource type="Texture2D" uid="uid://d0q1tgkil22pw" path="res://textures/T_Noise_001R.png" id="2_m0lgh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sp4y7"]
+render_priority = 0
+shader = ExtResource("1_2dnit")
+shader_parameter/Texture2DParameter = ExtResource("2_m0lgh")
+
+[sub_resource type="Curve" id="Curve_arvpe"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_cr76u"]
+curve = SubResource("Curve_arvpe")
+
+[sub_resource type="Gradient" id="Gradient_nbxdo"]
+colors = PackedColorArray(0, 0, 0, 1, 0.39232534, 0.39232537, 0.39232534, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_s2gpv"]
+gradient = SubResource("Gradient_nbxdo")
+
+[sub_resource type="Curve" id="Curve_w7gg4"]
+_limits = [0.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0, 0.35714293), 0.0, 0.0, 0, 0, Vector2(1, 1.4285716), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_elmjn"]
+curve = SubResource("Curve_w7gg4")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fwe26"]
+emission_shape = 1
+emission_sphere_radius = 1.0
+spread = 180.0
+initial_velocity_min = 1.0
+initial_velocity_max = 4.0
+gravity = Vector3(0, 2, 0)
+scale_min = 0.5
+scale_max = 5.0
+scale_curve = SubResource("CurveTexture_elmjn")
+color_ramp = SubResource("GradientTexture1D_s2gpv")
+alpha_curve = SubResource("CurveTexture_cr76u")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8e78s"]
+transparency = 1
+vertex_color_use_as_albedo = true
+ao_light_affect = 0.15
+
+[sub_resource type="SphereMesh" id="SphereMesh_bf76v"]
+material = SubResource("StandardMaterial3D_8e78s")
+
+[node name="GPUParticles3D" type="GPUParticles3D" unique_id=2094980630]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_sp4y7")
+emitting = false
+one_shot = true
+preprocess = 0.05
+explosiveness = 0.5
+process_material = SubResource("ParticleProcessMaterial_fwe26")
+draw_pass_1 = SubResource("SphereMesh_bf76v")

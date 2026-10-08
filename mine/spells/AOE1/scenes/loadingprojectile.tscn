@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://dpcoduhkykw2k"]
+
+[ext_resource type="Script" path="res://spells/AOE1/scripts/loadingprojectile.gd" id="1_xp3o4"]
+[ext_resource type="PackedScene" path="res://spells/AOE1/scenes/projectile.tscn" id="2_oxovn"]
+[ext_resource type="Shader" path="res://shaders/projectile.gdshader" id="3_hljch"]
+[ext_resource type="Shader" uid="uid://3udx1vbw5buw" path="res://shaders/bom.tres" id="3_o3x7d"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ohbbn"]
+render_priority = 0
+shader = ExtResource("3_o3x7d")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o3x7d"]
+render_priority = 0
+shader = ExtResource("3_hljch")
+shader_parameter/core_color = Color(1, 1, 1, 1)
+shader_parameter/glow_color = Color(1, 0, 0, 1)
+shader_parameter/glow_intensity = 5.0
+shader_parameter/glow_power = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_28m0y"]
+material = SubResource("ShaderMaterial_o3x7d")
+radius = 0.025
+height = 0.05
+
+[node name="loadingprojectile" type="Node3D" unique_id=2001721493]
+script = ExtResource("1_xp3o4")
+projectile = ExtResource("2_oxovn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2073784174]
+material_override = SubResource("ShaderMaterial_ohbbn")
+mesh = SubResource("SphereMesh_28m0y")

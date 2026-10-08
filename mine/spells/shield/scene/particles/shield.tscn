@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bovl0nspp1ew2"]
+
+[ext_resource type="Shader" uid="uid://ciohjm55q34nl" path="res://mine/spells/shield/shader/hexgrid.gdshader" id="1_6f6vo"]
+[ext_resource type="CylinderMesh" uid="uid://dsn3wxpbh6klf" path="res://mine/spells/shield/mesh/shieldmesh.tres" id="2_j0hb7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5bbo0"]
+shader = ExtResource("1_6f6vo")
+shader_parameter/radius = 0.3
+shader_parameter/spacing = 0.25
+shader_parameter/sphere_radius = 3.0
+shader_parameter/hex_rotation_deg = 0.0
+
+[node name="GPUParticles3D" type="GPUParticles3D" unique_id=809403878]
+emitting = false
+amount = 20
+lifetime = 0.4
+one_shot = true
+explosiveness = 0.8
+fixed_fps = 0
+local_coords = true
+process_material = SubResource("ShaderMaterial_5bbo0")
+draw_pass_1 = ExtResource("2_j0hb7")

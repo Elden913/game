@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://gco3rayean1j"]
+
+[ext_resource type="Texture2D" uid="uid://c2m6u5c3oyvjx" path="res://materials/zoltraak magic circle.png" id="1_56pir"]
+
+[resource]
+transparency = 1
+cull_mode = 2
+albedo_texture = ExtResource("1_56pir")
+emission_enabled = true
+emission = Color(0.1782, 0.81411, 0.99, 1)
+emission_energy_multiplier = 4.2

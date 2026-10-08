@@ -1,0 +1,27 @@
+[gd_resource type="CylinderMesh" format=3 uid="uid://dsn3wxpbh6klf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x5jlb"]
+transparency = 1
+blend_mode = 3
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_color = Color(1, 1, 1, 0.15294118)
+emission_enabled = true
+emission = Color(7.315874e-06, 0.71092844, 0.94373214, 1)
+emission_energy_multiplier = 5.0
+rim_enabled = true
+rim = 0.5
+backlight = Color(0, 1, 1, 1)
+refraction_scale = 0.0
+disable_receive_shadows = true
+grow = true
+grow_amount = 0.05
+
+[resource]
+lightmap_size_hint = Vector2i(11, 7)
+material = SubResource("StandardMaterial3D_x5jlb")
+flip_faces = true
+top_radius = 0.3
+bottom_radius = 0.3
+height = 0.06
+radial_segments = 6

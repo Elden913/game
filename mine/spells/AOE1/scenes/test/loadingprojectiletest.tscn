@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://bcpx18mhv7t1g"]
+
+[ext_resource type="PackedScene" path="res://spells/AOE1/scenes/loadingprojectile.tscn" id="1_re3ji"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_re3ji"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_yug0h"]
+sky_material = SubResource("ProceduralSkyMaterial_re3ji")
+
+[sub_resource type="Environment" id="Environment_8oc6p"]
+background_mode = 2
+sky = SubResource("Sky_yug0h")
+glow_enabled = true
+
+[node name="Node3D" type="Node3D" unique_id=689500268]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1382245254]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1288196169]
+environment = SubResource("Environment_8oc6p")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=90956969]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.504178, 1.428607, 5.497292)
+
+[node name="loadingprojectile" parent="." unique_id=1634131012 instance=ExtResource("1_re3ji")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.006236315, -1.1920929e-07, -0.032316208)
+bob_dur = 1.0

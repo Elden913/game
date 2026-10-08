@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://8lwn824ffjtd"]
+
+[ext_resource type="PackedScene" uid="uid://bk38dky7nll01" path="res://mine/spells/shield/scene/main.tscn" id="1_84nrc"]
+[ext_resource type="PackedScene" uid="uid://dx820hoo51613" path="res://mine/spells/shield/scene/parts/Brokenpart.tscn" id="2_ce6vb"]
+[ext_resource type="Script" uid="uid://gjwtb44td2sh" path="res://mine/spells/shield/script/area_3d.gd" id="3_t0vfo"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_33cqm"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_xwcet"]
+sky_material = SubResource("ProceduralSkyMaterial_33cqm")
+
+[sub_resource type="Environment" id="Environment_p1ry8"]
+background_mode = 2
+sky = SubResource("Sky_xwcet")
+glow_enabled = true
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_28m0y"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_ohbbn"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ohbbn"]
+
+[node name="Node3D" type="Node3D" unique_id=1928465321]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1660933956]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1443636936]
+environment = SubResource("Environment_p1ry8")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=2136415582]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.829773, 10.937122)
+
+[node name="shieldcollide" parent="." unique_id=114182786 instance=ExtResource("1_84nrc")]
+collision_mask = 3
+Broken = ExtResource("2_ce6vb")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1104158671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.359697, 0, 0)
+collision_mask = 3
+script = ExtResource("3_t0vfo")
+power = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=730691002]
+shape = SubResource("SphereShape3D_28m0y")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D" unique_id=1404453994]
+mesh = SubResource("SphereMesh_ohbbn")
+
+[node name="Area3D2" type="Area3D" parent="." unique_id=603789634]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5323715, 1.5431318, 0)
+collision_mask = 3
+script = ExtResource("3_t0vfo")
+power = 20
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D2" unique_id=1997428375]
+shape = SubResource("SphereShape3D_28m0y")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D2" unique_id=508785360]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("SphereMesh_ohbbn")
+
+[node name="Area3D3" type="Area3D" parent="." unique_id=1862435115]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.21285391, 2.906516, -6.6491303)
+collision_mask = 3
+script = ExtResource("3_t0vfo")
+power = 20
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D3" unique_id=968017282]
+shape = SubResource("SphereShape3D_28m0y")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D3" unique_id=211116822]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("SphereMesh_ohbbn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=871485124]
+mesh = SubResource("BoxMesh_ohbbn")
+
+[connection signal="body_entered" from="Area3D3" to="shieldcollide" method="_on_area_3d_3_body_entered"]
+[connection signal="body_entered" from="Area3D3" to="Area3D2" method="_on_area_3d_3_body_entered"]

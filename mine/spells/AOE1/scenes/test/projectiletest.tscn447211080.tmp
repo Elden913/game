@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://viwukfr4lhn7"]
+
+[ext_resource type="Script" uid="uid://buwf7cxj7xiqn" path="res://spells/AOE1/scripts/projectile.gd" id="1_ygt16"]
+[ext_resource type="PackedScene" uid="uid://ddx8dfkbnobn1" path="res://spells/AOE1/scenes/particles/explode.tscn" id="2_hi457"]
+[ext_resource type="PackedScene" uid="uid://dynfycckowb0b" path="res://spells/AOE1/scenes/particles/spark1.tscn" id="3_lvk80"]
+[ext_resource type="PackedScene" uid="uid://c5hcx70m8aplo" path="res://spells/AOE1/scenes/particles/trail.tscn" id="4_mbhtd"]
+[ext_resource type="PackedScene" uid="uid://b0pvgs3of8dca" path="res://spells/AOE1/scenes/projectile.tscn" id="6_lvk80"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dthml"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_1rqqw"]
+sky_material = SubResource("ProceduralSkyMaterial_dthml")
+
+[sub_resource type="Environment" id="Environment_ldsu5"]
+background_mode = 2
+sky = SubResource("Sky_1rqqw")
+glow_enabled = true
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ohbbn"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dthml"]
+emission_enabled = true
+emission = Color(1, 0.39607844, 0.4509804, 1)
+emission_energy_multiplier = 7.83
+
+[sub_resource type="SphereMesh" id="SphereMesh_ohbbn"]
+material = SubResource("StandardMaterial3D_dthml")
+radius = 0.25
+height = 0.5
+
+[node name="Node3D" type="Node3D" unique_id=767782628]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2054773192]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1556249118]
+environment = SubResource("Environment_ldsu5")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=889151814]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -3.988554, 0, 0)
+visible = false
+collision_layer = 0
+script = ExtResource("1_ygt16")
+explosion_scene = ExtResource("2_hi457")
+spark_scene = ExtResource("3_lvk80")
+trail_scene = ExtResource("4_mbhtd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=398458035]
+shape = SubResource("SphereShape3D_ohbbn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D" unique_id=557045783]
+mesh = SubResource("SphereMesh_ohbbn")
+
+[node name="Timer" type="Timer" parent="Area3D" unique_id=1449055543]
+wait_time = 3.0
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1218404112]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46.185516, 0, 9.67762)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=22854495]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49.85108, 0, 0)
+use_collision = true
+
+[node name="Area3D2" parent="." unique_id=1175037477 instance=ExtResource("6_lvk80")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[connection signal="body_entered" from="Area3D" to="Area3D" method="_on_body_entered"]
+[connection signal="timeout" from="Area3D/Timer" to="Area3D" method="_on_timer_timeout"]

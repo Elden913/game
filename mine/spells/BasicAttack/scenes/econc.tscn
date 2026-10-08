@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cpgeea6lml2ox"]
+
+[ext_resource type="Shader" uid="uid://bwu78jttdkqo5" path="res://shaders/zoltraak.gdshader" id="1_dq55s"]
+
+[sub_resource type="Curve" id="Curve_yv4nf"]
+_limits = [0.0, 10.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 27.593409, 0, 0, Vector2(1, 10), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_102mh"]
+curve = SubResource("Curve_yv4nf")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yv4nf"]
+gravity = Vector3(0, 0, 0)
+scale_min = 0.099999994
+scale_max = 0.099999994
+scale_curve = SubResource("CurveTexture_102mh")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yv4nf"]
+render_priority = 0
+shader = ExtResource("1_dq55s")
+shader_parameter/core_color = Color(1, 1, 0.85430586, 1)
+shader_parameter/glow_color = Color(1, 0.65457314, 0, 1)
+shader_parameter/glow_intensity = 20.0
+shader_parameter/glow_power = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_28m0y"]
+material = SubResource("ShaderMaterial_yv4nf")
+radius = 0.125
+height = 0.25
+
+[node name="Econc" type="GPUParticles3D" unique_id=2102897030]
+amount = 1
+process_material = SubResource("ParticleProcessMaterial_yv4nf")
+draw_pass_1 = SubResource("SphereMesh_28m0y")

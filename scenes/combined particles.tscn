@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://c1gb3ipd2ago8"]
+
+[ext_resource type="PackedScene" uid="uid://ddx8dfkbnobn1" path="res://scenes/explode.tscn" id="1_kwuy0"]
+[ext_resource type="PackedScene" uid="uid://dynfycckowb0b" path="res://scenes/spark.tscn" id="2_7j1xs"]
+[ext_resource type="PackedScene" uid="uid://c5hcx70m8aplo" path="res://scenes/trail.tscn" id="3_cm8xs"]
+
+[node name="Node3D" type="Node3D" unique_id=1233089459]
+
+[node name="explosion" parent="." unique_id=1495305320 instance=ExtResource("1_kwuy0")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+one_shot = true
+
+[node name="spark" parent="." unique_id=1655126641 instance=ExtResource("2_7j1xs")]
+cast_shadow = 0
+
+[node name="trail" parent="." unique_id=975593564 instance=ExtResource("3_cm8xs")]
+cast_shadow = 0

@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://b64l7i62qrj8i"]
+
+[ext_resource type="PackedScene" path="res://spells/AOE1/main.tscn" id="1_0a1pi"]
+[ext_resource type="PackedScene" path="res://spells/AOE1/scenes/loadingprojectile.tscn" id="2_dq7yo"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_dq7yo"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_0a1pi"]
+sky_material = SubResource("ProceduralSkyMaterial_dq7yo")
+
+[sub_resource type="Environment" id="Environment_oa4s4"]
+background_mode = 2
+sky = SubResource("Sky_0a1pi")
+glow_enabled = true
+
+[sub_resource type="Animation" id="Animation_0a1pi"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(14.03941, 0, -28.122082)]
+}
+
+[sub_resource type="Animation" id="Animation_oa4s4"]
+resource_name = "adasd"
+length = 7.5
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.4666667, 7.4666667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(14.03941, 0, -2.5535831), Vector3(14.03941, 0, -28.122082), Vector3(14.03941, 0, 40.096592)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_v0f31"]
+_data = {
+&"RESET": SubResource("Animation_0a1pi"),
+&"adasd": SubResource("Animation_oa4s4")
+}
+
+[node name="Node3D" type="Node3D" unique_id=896566664]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.562561)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=460989632]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, -0.2803924, -0.47880578, 0.29510164)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=963026788]
+environment = SubResource("Environment_oa4s4")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=946987240]
+transform = Transform3D(0.7346305, 0.25572413, -0.6284293, 8.265852e-09, 0.92624825, 0.37691435, 0.67846745, -0.27689275, 0.6804502, -19.900026, 3.2584126, 9.170776)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=2127953100]
+transform = Transform3D(3.3896592, 0, 0, 0, 15.330583, 0, 0, 0, 0.8386822, 14.03941, 0, -28.122082)
+use_collision = true
+size = Vector3(0.26, 1.6815796, 40.510193)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CSGBox3D" unique_id=1574681385]
+libraries/ = SubResource("AnimationLibrary_v0f31")
+autoplay = &"adasd"
+
+[node name="arcane" parent="." unique_id=884342125 instance=ExtResource("1_0a1pi")]
+transform = Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, -16.74535, -0.539711, -3.1649513)
+load_scene = ExtResource("2_dq7yo")
+cnt = 5

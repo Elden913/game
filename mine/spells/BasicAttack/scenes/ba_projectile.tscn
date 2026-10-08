@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://c67n611xoqjt4"]
+
+[ext_resource type="Script" uid="uid://b527bk75w6n8t" path="res://mine/spells/BasicAttack/scripts/ba_projectile.gd" id="1_j0o62"]
+[ext_resource type="Shader" uid="uid://bwu78jttdkqo5" path="res://shaders/zoltraak.gdshader" id="2_0thpo"]
+[ext_resource type="PackedScene" uid="uid://dxsrb7vdniat2" path="res://mine/spells/BasicAttack/scenes/impact.tscn" id="2_uych5"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ohbbn"]
+radius = 0.125
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fwe26"]
+render_priority = 0
+shader = ExtResource("2_0thpo")
+shader_parameter/core_color = Color(1, 1, 0.79476964, 1)
+shader_parameter/glow_color = Color(1, 0.43917835, 0, 1)
+shader_parameter/glow_intensity = 17.366000777385
+shader_parameter/glow_power = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_28m0y"]
+material = SubResource("ShaderMaterial_fwe26")
+radius = 0.125
+height = 0.25
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_28m0y"]
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_elmjn"]
+render_priority = 0
+shader = ExtResource("2_0thpo")
+shader_parameter/core_color = Color(1, 1, 0.8030442, 1)
+shader_parameter/glow_color = Color(0.78949946, 0.39736325, 0, 1)
+shader_parameter/glow_intensity = 20.0
+shader_parameter/glow_power = 2.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ohbbn"]
+material = SubResource("ShaderMaterial_elmjn")
+top_radius = 0.125
+bottom_radius = 0.0
+height = 1.0
+cap_top = false
+cap_bottom = false
+
+[node name="BAProjectile" type="Area3D" unique_id=240443309]
+collision_layer = 8
+collision_mask = 7
+script = ExtResource("1_j0o62")
+hitfx = ExtResource("2_uych5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1794698279]
+shape = SubResource("SphereShape3D_ohbbn")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=579363707]
+mesh = SubResource("SphereMesh_28m0y")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=736772590]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0.5)
+amount = 1
+lifetime = 10.0
+local_coords = true
+trail_lifetime = 10.0
+process_material = SubResource("ParticleProcessMaterial_28m0y")
+draw_pass_1 = SubResource("CylinderMesh_ohbbn")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

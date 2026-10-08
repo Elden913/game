@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://dxsrb7vdniat2"]
+
+[ext_resource type="Script" uid="uid://q0tlng1gng52" path="res://mine/spells/BasicAttack/scripts/impact.gd" id="1_1s448"]
+
+[sub_resource type="Curve" id="Curve_kayoy"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.7175336, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_1s448"]
+curve = SubResource("Curve_kayoy")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_libyx"]
+radial_velocity_min = 9.999977
+radial_velocity_max = 9.999977
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_1s448")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1s448"]
+transparency = 1
+albedo_color = Color(1, 0.7529412, 0.33333334, 1)
+emission_enabled = true
+emission = Color(0.48311496, 0.48311496, 0.18846218, 1)
+emission_on_uv2 = true
+rim_enabled = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_kayoy"]
+material = SubResource("StandardMaterial3D_1s448")
+radius = 0.125
+height = 0.25
+
+[node name="Impact" type="GPUParticles3D" unique_id=1718754857]
+emitting = false
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_libyx")
+draw_pass_1 = SubResource("SphereMesh_kayoy")
+script = ExtResource("1_1s448")
+
+[node name="Timer" type="Timer" parent="." unique_id=1544879119]
+wait_time = 0.5
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

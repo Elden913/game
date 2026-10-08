@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://br7wm3omdhyly"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ohbbn"]
+particle_flag_align_y = true
+emission_shape = 2
+emission_sphere_radius = 0.25
+direction = Vector3(0, 0, 0)
+spread = 0.0
+angular_velocity_min = -1.6093254e-05
+angular_velocity_max = -1.6093254e-05
+orbit_velocity_min = 9.49949e-08
+orbit_velocity_max = 9.49949e-08
+radial_velocity_min = -1.0000223
+radial_velocity_max = -1.0000223
+gravity = Vector3(0, 0, 0)
+radial_accel_min = -100.0
+radial_accel_max = -0.10000224
+scale_min = 0.5
+scale_max = 2.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2t8c6"]
+emission_enabled = true
+emission = Color(1, 0.31764707, 0.4627451, 1)
+emission_energy_multiplier = 8.0
+disable_receive_shadows = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_fwe26"]
+material = SubResource("StandardMaterial3D_2t8c6")
+radius = 0.005
+height = 0.01
+
+[node name="spark2" type="GPUParticles3D" unique_id=1655126641]
+emitting = false
+amount = 20
+one_shot = true
+speed_scale = 3.0
+explosiveness = 1.0
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_ohbbn")
+draw_pass_1 = SubResource("SphereMesh_fwe26")

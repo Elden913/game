@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://ddx8dfkbnobn1"]
+
+[ext_resource type="Shader" uid="uid://3udx1vbw5buw" path="res://shaders/bom.tres" id="1_ic53i"]
+[ext_resource type="Texture2D" uid="uid://d0q1tgkil22pw" path="res://textures/T_Noise_001R.png" id="2_nceg2"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1qgi1"]
+render_priority = 0
+shader = ExtResource("1_ic53i")
+shader_parameter/Texture2DParameter = ExtResource("2_nceg2")
+
+[sub_resource type="Curve" id="Curve_8177o"]
+_data = [Vector2(0.10215053, 0), 0.0, 0.0, 0, 0, Vector2(0.4139785, 0.28571433), 2.3914294, 2.3914294, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_4445p"]
+curve = SubResource("Curve_8177o")
+
+[sub_resource type="Curve" id="Curve_1e2el"]
+_limits = [0.0, 100.0, 0.0, 1.0]
+
+[sub_resource type="CurveTexture" id="CurveTexture_bgo6b"]
+curve = SubResource("Curve_1e2el")
+
+[sub_resource type="Curve" id="Curve_qpxn4"]
+_limits = [0.0, 100.0, 0.0, 1.0]
+_data = [Vector2(0, 26.785713), 0.0, 0.0, 0, 0, Vector2(0.15591398, 3.5714264), 0.0, 0.0, 0, 0, Vector2(0.2956989, 42.85714), 321.76328, 321.76328, 0, 0, Vector2(0.48387095, 69.64285), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_rwbbq"]
+curve = SubResource("Curve_qpxn4")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_28m0y"]
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_rwbbq")
+alpha_curve = SubResource("CurveTexture_4445p")
+emission_curve = SubResource("CurveTexture_bgo6b")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n41u6"]
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.8570899, 0.50000495, 0.6249565, 1)
+emission_enabled = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_vymrk"]
+material = SubResource("StandardMaterial3D_n41u6")
+radius = 0.075
+height = 0.15
+
+[node name="explosion" type="GPUParticles3D" unique_id=1495305320]
+material_override = SubResource("ShaderMaterial_1qgi1")
+emitting = false
+amount = 1
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_28m0y")
+draw_pass_1 = SubResource("SphereMesh_vymrk")
